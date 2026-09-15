@@ -6,6 +6,7 @@
 #include "../include/input.h"
 #include "../include/parser.h"
 #include "../include/process.h"
+#include "../include/builtin.h"
 
 int main()
 {
@@ -13,7 +14,7 @@ int main()
     char **tokens;
 
     printf("=====================================\n");
-    printf("Mini Bash Clone - Version 4.0\n");
+    printf("Mini Bash Clone - Version 5.0\n");
     printf("=====================================\n");
 
     while (1)
@@ -22,24 +23,20 @@ int main()
 
         line = read_line();
 
-        if (strcmp(line, "exit") == 0)
-        {
-            free(line);
-            break;
-        }
-
         tokens = parse_line(line);
 
         if (tokens[0] != NULL)
         {
-            execute(tokens);
+            if (execute_builtin(tokens) == 0)
+            {
+                execute(tokens);
+            }
         }
 
         free_tokens(tokens);
         free(line);
     }
 
-    printf("Goodbye!\n");
-
     return 0;
 }
+

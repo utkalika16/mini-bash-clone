@@ -129,3 +129,36 @@ Ready for execvp()
 - Command execution using execvp()
 - Parent-child synchronization using waitpid()
 - Error handling using perror()
+## Week 5 Features
+
+- Built-in command support
+- `cd`
+- `pwd`
+- `help`
+- `clear`
+- `exit`
+- Environment variable support using `getenv()`
+
+## Week 5 Architecture
+
+```text
+User Input
+    ↓
+read_line()
+    ↓
+parse_line()
+    ↓
+Check Built-in Command
+    ↓
+┌───────────────┐
+│ Built-in?     │
+└───────┬───────┘
+        │
+   ┌────┴────┐
+   YES       NO
+    ↓         ↓
+builtin.c   process.c
+    ↓         ↓
+Parent      fork()
+process       ↓
+            execvp()

@@ -1,10 +1,11 @@
-CC = gcc
+kCC = gcc
 CFLAGS = -Wall -Wextra -g -Iinclude
 
 SRC = src/main.c \
       src/input.c \
       src/parser.c \
-      src/process.c
+      src/process.c \
+      src/builtin.c
 
 TARGET = bin/bashclone
 
