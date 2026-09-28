@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 #include "../include/process.h"
 
@@ -14,6 +16,10 @@ int execute(char **tokens)
 
     if (pid == 0)
     {
+        /* Restore default signal handling in child */
+        signal(SIGINT, SIG_DFL);
+        signal(SIGTSTP, SIG_DFL);
+
         if (execvp(tokens[0], tokens) == -1)
         {
             perror("Mini Bash Clone");
@@ -27,11 +33,32 @@ int execute(char **tokens)
     }
     else
     {
-        do
+        /* Wait for foreground child */
+        while (1)
         {
-            waitpid(pid, &status, WUNTRACED);
+            pid_t result = waitpid(pid, &status, WUNTRACED);
+
+            if (result == pid)
+            {
+                break;
+            }
+
+            if (result == -1 && errno == EINTR)
+            {
+                continue;
+            }
+
+            if (result == -1 && errno == ECHILD)
+            {
+                break;
+            }
+
+            if (result == -1)
+            {
+                perror("waitpid");
+                break;
+            }
         }
-        while (!WIFEXITED(status) && !WIFSIGNALED(status));
     }
 
     return 1;

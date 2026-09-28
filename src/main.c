@@ -7,14 +7,18 @@
 #include "../include/parser.h"
 #include "../include/process.h"
 #include "../include/builtin.h"
+#include "../include/signals.h"
 
 int main()
 {
     char *line;
     char **tokens;
 
+    /* Initialize signal handlers */
+    initialize_signals();
+
     printf("=====================================\n");
-    printf("Mini Bash Clone - Version 5.0\n");
+    printf("Mini Bash Clone - Version 6.0\n");
     printf("=====================================\n");
 
     while (1)
@@ -22,6 +26,11 @@ int main()
         printf("myshell> ");
 
         line = read_line();
+
+        if (line == NULL)
+        {
+            break;
+        }
 
         tokens = parse_line(line);
 
@@ -39,4 +48,3 @@ int main()
 
     return 0;
 }
-

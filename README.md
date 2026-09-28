@@ -162,3 +162,37 @@ builtin.c   process.c
 Parent      fork()
 process       ↓
             execvp()
+## Week 6 - Signals and Process Control
+
+### Objective
+
+Week 6 extends Mini Bash Clone with signal handling and basic process control.
+
+The shell is designed to handle signals safely so that pressing `Ctrl+C` does not terminate the shell itself.
+
+### Week 6 Features
+
+- Signal handling using `signal()`
+- `SIGINT` handling for `Ctrl+C`
+- `SIGCHLD` handling for completed child processes
+- Zombie process cleanup using `waitpid()`
+- Shell continues running after `Ctrl+C`
+- Integration of signal handling into the main shell loop
+
+### Signal Flow
+
+```text
+User
+  |
+  | Ctrl+C
+  v
+SIGINT
+  |
+  v
+sigint_handler()
+  |
+  v
+Shell remains running
+  |
+  v
+myshell>
