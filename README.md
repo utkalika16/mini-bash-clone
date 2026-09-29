@@ -232,3 +232,39 @@ Command 2
    | stdin
    v
 Terminal
+## Week 8 - Memory Management, Debugging, and Valgrind
+
+### Objective
+
+Week 8 focuses on memory management, debugging, and improving the reliability of Mini Bash Clone.
+
+The project was tested using Valgrind, GDB, and AddressSanitizer (ASan).
+
+### Week 8 Features
+
+- Memory leak detection using Valgrind
+- Debugging using GDB
+- AddressSanitizer support
+- Defensive memory management
+- Improved resource cleanup
+- Debugging symbols using `-g`
+- Memory-safe shell execution
+
+### Memory Management
+
+Mini Bash Clone dynamically allocates memory for:
+
+- Command input buffers
+- Command argument arrays
+- Parsed command data
+
+All dynamically allocated memory is properly released after use.
+
+The `exit` command was updated so that allocated input and token memory is freed before the shell terminates.
+
+### Valgrind Testing
+
+The shell was tested using:
+
+```text
+valgrind --leak-check=full --show-leak-kinds=all ./bin/bashclone

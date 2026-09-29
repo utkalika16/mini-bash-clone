@@ -85,6 +85,17 @@ int main()
 
             if (tokens[0] != NULL)
             {
+                /*
+                 * Handle exit here so allocated memory is freed
+                 * before terminating the shell.
+                 */
+                if (strcmp(tokens[0], "exit") == 0)
+                {
+                    free_tokens(tokens);
+                    free(line);
+                    break;
+                }
+
                 if (execute_builtin(tokens) == 0)
                 {
                     execute(tokens);
