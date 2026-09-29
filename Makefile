@@ -6,13 +6,14 @@ SRC = src/main.c \
       src/parser.c \
       src/process.c \
       src/builtin.c \
-      src/signals.c
+      src/signals.c \
+      src/pipes.c
 
 TARGET = bin/bashclone
 
 all: $(TARGET)
 
-$(TARGET):
+$(TARGET): $(SRC)
 	mkdir -p bin
 	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)
 

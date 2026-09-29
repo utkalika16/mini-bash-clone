@@ -196,3 +196,39 @@ Shell remains running
   |
   v
 myshell>
+## Week 7 - Pipes and Inter-Process Communication
+
+### Objective
+
+Week 7 extends Mini Bash Clone with anonymous pipe support for inter-process communication (IPC).
+
+The shell can now execute two commands connected using the `|` operator.
+
+### Week 7 Features
+
+- Anonymous pipes using `pipe()`
+- Inter-process communication (IPC)
+- Two-stage command pipelines
+- Input/output redirection using `dup2()`
+- Process creation using `fork()`
+- Command execution using `execvp()`
+- Pipe operator `|`
+- Parent process waits for both child processes
+- Integration with existing signal handling and command execution
+
+### Pipe Architecture
+
+```text
+Command 1
+   |
+   | stdout
+   v
+pipe()
+   |
+   | kernel pipe
+   v
+Command 2
+   |
+   | stdin
+   v
+Terminal
