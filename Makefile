@@ -7,21 +7,18 @@ SRC = src/main.c \
       src/process.c \
       src/builtin.c \
       src/signals.c \
-      src/pipes.c
+      src/pipes.c \
+      src/redirect.c
 
 TARGET = bin/bashclone
 
 all: $(TARGET)
 
-$(TARGET): $(SRC)
+$(TARGET):
 	mkdir -p bin
 	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)
 
-asan:
-	mkdir -p bin
-	$(CC) $(CFLAGS) -fsanitize=address $(SRC) -o $(TARGET)
-
-run:
+run: $(TARGET)
 	./$(TARGET)
 
 clean:

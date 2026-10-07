@@ -9,14 +9,13 @@
 #include "../include/builtin.h"
 #include "../include/signals.h"
 #include "../include/pipes.h"
+#include "../include/redirect.h"
 
-/* Tokenize one side of a pipe */
 static void tokenize(char *str, char **argv)
 {
     int i = 0;
-    char *token;
 
-    token = strtok(str, " \t\n");
+    char *token = strtok(str, " \t\n");
 
     while (token != NULL)
     {
@@ -27,21 +26,17 @@ static void tokenize(char *str, char **argv)
     argv[i] = NULL;
 }
 
-int main()
+int main(void)
 {
     char *line;
     char **tokens;
 
-    /* Initialize signal handlers */
     initialize_signals();
-
-    printf("=====================================\n");
-    printf("Mini Bash Clone - Version 7.0\n");
-    printf("=====================================\n");
 
     while (1)
     {
         printf("myshell> ");
+        fflush(stdout);
 
         line = read_line();
 
@@ -50,7 +45,6 @@ int main()
             break;
         }
 
-        /* Check whether the command contains a pipe */
         if (strchr(line, '|') != NULL)
         {
             char *argv1[64];
@@ -69,34 +63,28 @@ int main()
             tokenize(left, argv1);
             tokenize(right, argv2);
 
-            if (argv1[0] == NULL || argv2[0] == NULL)
-            {
-                printf("Invalid pipe command\n");
-                free(line);
-                continue;
-            }
-
             execute_pipe(argv1, argv2);
         }
         else
         {
-            /* Normal command processing */
+            if (strcmp(line, "exit") == 0)
+            {
+                free(line);
+                break;
+            }
+
             tokens = parse_line(line);
 
-            if (tokens[0] != NULL)
+            if (tokens == NULL || tokens[0] == NULL)
             {
-                /*
-                 * Handle exit here so allocated memory is freed
-                 * before terminating the shell.
-                 */
-                if (strcmp(tokens[0], "exit") == 0)
-                {
-                    free_tokens(tokens);
-                    free(line);
-                    break;
-                }
+                free_tokens(tokens);
+                free(line);
+                continue;
+            }
 
-                if (execute_builtin(tokens) == 0)
+            if (execute_builtin(tokens) == 0)
+            {
+                if (execute_redirection(tokens) == 0)
                 {
                     execute(tokens);
                 }
