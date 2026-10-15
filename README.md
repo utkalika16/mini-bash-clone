@@ -2,269 +2,419 @@
 
 Mini Bash Clone is a simplified Unix-like shell developed in C as part of the Operating Systems and Systems Programming (OSSP) project.
 
-## Features (Week 1)
+## Week 1 - Project Setup
 
-- Interactive REPL loop
-- Makefile-based build
-- Git repository
+### Features
+
+- Interactive Read-Eval-Print Loop (REPL)
+- Makefile-based build system
+- Git repository setup
 - Linux development environment
+- Basic shell structure
 
-## Build
+## Build Instructions
+
+Build the project using:
 
 ```bash
 make
-Week 2 Features
+
+Run the shell using:
+
+./bin/bashclone
+Week 2 - Dynamic Input Handling
+Features
 Dynamic command input
 Memory allocation using malloc()
 Automatic buffer expansion using realloc()
-Proper memory cleanup using free()
+Memory cleanup using free()
 Modular input handling using input.h and input.c
-Week 2 Architecture
-
-The shell now uses a dynamically allocated input buffer.
-
+Architecture
 User Input
-    ↓
+    |
+    v
 read_line()
-    ↓
+    |
+    v
 malloc()
-    ↓
+    |
+    v
 realloc() when buffer is full
-    ↓
+    |
+    v
 Command returned to main.c
-    ↓
+    |
+    v
 free() after use
-Week 3 Features
+Week 3 - Command Parsing
+Features
 Command parsing using strtok()
 Dynamic argv[] construction
 Modular parser implementation
-Ready for process execution with execvp()
-Week 3 Architecture
-
-The shell now parses user commands into tokens.
-
+Command preparation for execution using execvp()
+Architecture
 User Input
-    ↓
+    |
+    v
 read_line()
-    ↓
+    |
+    v
 parse_line()
-    ↓
+    |
+    v
 strtok()
-    ↓
+    |
+    v
 argv[] tokens
-    ↓
+    |
+    v
 Ready for execvp()
-
-Then:
-
-**Ctrl + O** → **Enter** → **Ctrl + X**
-
-After exiting nano, run:
-
-```bash
-cat README.md
-
-That's the complete corrected README.
-
-give only wt i ned to copy in it
-# Mini Bash Clone
-
-Mini Bash Clone is a simplified Unix-like shell developed in C as part of the Operating Systems and Systems Programming (OSSP) project.
-
-## Features (Week 1)
-
-- Interactive REPL loop
-- Makefile-based build
-- Git repository
-- Linux development environment
-
-## Build
-
-```bash
-make
-Week 2 Features
-Dynamic command input
-Memory allocation using malloc()
-Automatic buffer expansion using realloc()
-Proper memory cleanup using free()
-Modular input handling using input.h and input.c
-Week 2 Architecture
-
-The shell now uses a dynamically allocated input buffer.
-
+Week 4 - Process Creation and Execution
+Features
+Process creation using fork()
+Command execution using execvp()
+Parent-child synchronization using waitpid()
+Error handling using perror()
+Execution of external commands
+Process management
+Process Execution Flow
+User Command
+    |
+    v
+Parse Command
+    |
+    v
+fork()
+    |
+    +-------------------+
+    |                   |
+    v                   v
+Parent Process     Child Process
+    |                   |
+    v                   v
+waitpid()             execvp()
+    |                   |
+    v                   v
+Continue Shell     Execute Command
+Week 5 - Built-in Commands
+Features
+Built-in command support
+cd - Change the current directory
+pwd - Display the current working directory
+help - Display help information
+clear - Clear the terminal
+exit - Terminate the shell
+env - Display environment variables
+Environment variable access using getenv()
+Directory management using chdir() and getcwd()
+Architecture
 User Input
-    ↓
+    |
+    v
 read_line()
-    ↓
-malloc()
-    ↓
-realloc() when buffer is full
-    ↓
-Command returned to main.c
-    ↓
-free() after use
-Week 3 Features
-Command parsing using strtok()
-Dynamic argv[] construction
-Modular parser implementation
-Ready for process execution with execvp()
-Week 3 Architecture
-
-The shell now parses user commands into tokens.
-
-User Input
-    ↓
-read_line()
-    ↓
+    |
+    v
 parse_line()
-    ↓
-strtok()
-    ↓
-argv[] tokens
-    ↓
-Ready for execvp()
-## Week 4 Features
-
-- Process creation using fork()
-- Command execution using execvp()
-- Parent-child synchronization using waitpid()
-- Error handling using perror()
-## Week 5 Features
-
-- Built-in command support
-- `cd`
-- `pwd`
-- `help`
-- `clear`
-- `exit`
-- Environment variable support using `getenv()`
-
-## Week 5 Architecture
-
-```text
-User Input
-    ↓
-read_line()
-    ↓
-parse_line()
-    ↓
+    |
+    v
 Check Built-in Command
-    ↓
-┌───────────────┐
-│ Built-in?     │
-└───────┬───────┘
-        │
-   ┌────┴────┐
-   YES       NO
-    ↓         ↓
-builtin.c   process.c
-    ↓         ↓
-Parent      fork()
-process       ↓
-            execvp()
-## Week 6 - Signals and Process Control
-
-### Objective
+    |
+    v
+Is it a built-in?
+    |
+    +-------------------+
+    |                   |
+   YES                   NO
+    |                   |
+    v                   v
+builtin.c            process.c
+    |                   |
+    v                   v
+Execute Built-in       fork()
+                        |
+                        v
+                      execvp()
+Week 6 - Signals and Process Control
+Objective
 
 Week 6 extends Mini Bash Clone with signal handling and basic process control.
 
-The shell is designed to handle signals safely so that pressing `Ctrl+C` does not terminate the shell itself.
+The shell is designed to handle signals safely so that pressing Ctrl+C does not terminate the shell itself.
 
-### Week 6 Features
-
-- Signal handling using `signal()`
-- `SIGINT` handling for `Ctrl+C`
-- `SIGCHLD` handling for completed child processes
-- Zombie process cleanup using `waitpid()`
-- Shell continues running after `Ctrl+C`
-- Integration of signal handling into the main shell loop
-
-### Signal Flow
-
-```text
+Features
+Signal handling using signal()
+SIGINT handling for Ctrl+C
+SIGCHLD handling for completed child processes
+Zombie process cleanup using waitpid()
+Shell continues running after Ctrl+C
+Integration of signal handling into the main shell loop
+Signal Flow
 User
-  |
-  | Ctrl+C
-  v
+    |
+    | Ctrl+C
+    v
 SIGINT
-  |
-  v
+    |
+    v
 sigint_handler()
-  |
-  v
+    |
+    v
 Shell remains running
-  |
-  v
+    |
+    v
 myshell>
-## Week 7 - Pipes and Inter-Process Communication
+Importance of Signal Handling
 
-### Objective
+Signal handling allows the shell to respond to events generated by the operating system or user.
 
-Week 7 extends Mini Bash Clone with anonymous pipe support for inter-process communication (IPC).
+The SIGINT signal is commonly generated when the user presses Ctrl+C. Handling this signal helps the shell remain available for further commands.
 
-The shell can now execute two commands connected using the `|` operator.
+The SIGCHLD signal can notify the shell when a child process changes state, allowing appropriate child-process cleanup.
 
-### Week 7 Features
+Week 7 - Pipes and Inter-Process Communication
+Objective
 
-- Anonymous pipes using `pipe()`
-- Inter-process communication (IPC)
-- Two-stage command pipelines
-- Input/output redirection using `dup2()`
-- Process creation using `fork()`
-- Command execution using `execvp()`
-- Pipe operator `|`
-- Parent process waits for both child processes
-- Integration with existing signal handling and command execution
+Week 7 adds anonymous pipe support for inter-process communication (IPC). The shell can execute two commands connected using the | operator.
 
-### Pipe Architecture
-
-```text
+Features
+Anonymous pipes using pipe()
+Inter-process communication (IPC)
+Two-stage command pipelines
+File descriptor manipulation using dup2()
+Process creation using fork()
+Command execution using execvp()
+Pipe operator |
+Parent process waits for both child processes
+Integration with existing signal handling and command execution
+Pipe Architecture
 Command 1
-   |
-   | stdout
-   v
-pipe()
-   |
-   | kernel pipe
-   v
+    |
+    | Standard Output
+    v
+  pipe()
+    |
+    | Kernel Pipe
+    v
 Command 2
-   |
-   | stdin
-   v
-Terminal
-## Week 8 - Memory Management, Debugging, and Valgrind
+    |
+    | Standard Input
+    v
+  Terminal
+Example
 
-### Objective
+A pipeline connects the output of one command to the input of another command.
+
+ls | wc -l
+
+In this example, ls produces a list of directory entries, and wc -l counts the lines received through the pipe.
+
+Importance of Pipes
+
+Pipes allow separate processes to communicate without requiring an intermediate file. They are an important operating system mechanism for connecting commands and transferring data between processes.
+
+Week 8 - Memory Management, Debugging, and Valgrind
+Objective
 
 Week 8 focuses on memory management, debugging, and improving the reliability of Mini Bash Clone.
 
 The project was tested using Valgrind, GDB, and AddressSanitizer (ASan).
 
-### Week 8 Features
-
-- Memory leak detection using Valgrind
-- Debugging using GDB
-- AddressSanitizer support
-- Defensive memory management
-- Improved resource cleanup
-- Debugging symbols using `-g`
-- Memory-safe shell execution
-
-### Memory Management
+Features
+Memory leak detection using Valgrind
+Debugging using GDB
+AddressSanitizer support
+Defensive memory management
+Improved resource cleanup
+Debugging symbols using -g
+Memory-safe shell execution
+Memory Management
 
 Mini Bash Clone dynamically allocates memory for:
 
-- Command input buffers
-- Command argument arrays
-- Parsed command data
+Command input buffers
+Command argument arrays
+Parsed command data
 
-All dynamically allocated memory is properly released after use.
+Dynamically allocated memory must be released after use to prevent memory leaks.
 
-The `exit` command was updated so that allocated input and token memory is freed before the shell terminates.
+The exit command was updated to free allocated input and token memory before the shell terminates.
 
-### Valgrind Testing
+Valgrind Testing
 
-The shell was tested using:
+The shell can be tested with Valgrind using:
 
-```text
 valgrind --leak-check=full --show-leak-kinds=all ./bin/bashclone
+Debugging with GDB
+
+GDB can be used to investigate program behavior, identify errors, and inspect variables during execution.
+
+Compile the project with debugging symbols enabled:
+
+make
+
+Start GDB:
+
+gdb ./bin/bashclone
+AddressSanitizer
+
+AddressSanitizer can help identify certain memory errors, including out-of-bounds accesses and use-after-free errors.
+
+It is useful during development and testing to improve program reliability.
+
+Week 9 - File Descriptors and I/O Redirection
+Objective
+
+Week 9 adds input/output redirection so that command output can be written to files instead of appearing only in the terminal.
+
+Features
+File operations using open() and close()
+File descriptor manipulation using dup2()
+Output redirection using >
+Append redirection using >>
+Integration with command execution
+Redirection implementation in redirect.c
+Redirection declarations in redirect.h
+Supported Operators
+Operator	Purpose	Example
+>	Redirect output to a file, replacing its existing contents	echo Hello > test.txt
+>>	Append output to the end of a file	echo World >> test.txt
+I/O Redirection Workflow
+User Command
+    |
+    v
+Parse Command
+    |
+    v
+Detect Redirection Operator
+    |
+    v
+Open Target File
+    |
+    v
+Redirect File Descriptor using dup2()
+    |
+    v
+Execute Command
+    |
+    v
+Close File Descriptor
+Important System Calls
+
+open()
+
+Opens a file or creates it when the appropriate flags are supplied. It returns a file descriptor that can be used for file operations.
+
+dup2()
+
+Duplicates a file descriptor onto a specified descriptor. It can redirect standard output to a file.
+
+close()
+
+Closes a file descriptor when it is no longer needed.
+
+Testing I/O Redirection
+
+Create or overwrite a file:
+
+echo Hello > test.txt
+
+Display the file contents:
+
+cat test.txt
+
+Append additional text:
+
+echo World >> test.txt
+
+Display the updated file:
+
+cat test.txt
+Expected Output
+Hello
+World
+
+The first command writes to the file, replacing its previous contents. The second command appends additional text.
+
+Importance of I/O Redirection
+
+I/O redirection allows shell commands to save their output to files. The append operator makes it possible to add information without removing existing file contents.
+
+These operations demonstrate file descriptor management and the use of POSIX system calls in shell development.
+
+Week 10 - POSIX Threads and Concurrency
+Objective
+
+Week 10 introduces POSIX thread support to Mini Bash Clone by adding a background monitoring thread.
+
+Features
+POSIX thread support using pthread
+Thread creation using pthread_create()
+Detached thread management using pthread_detach()
+Background monitoring of shell activity
+Periodic status messages
+Thread implementation in thread.c
+Thread declarations in thread.h
+Thread support enabled through the Makefile using -pthread
+Thread Architecture
+             Mini Bash Clone
+                    |
+                    v
+          start_monitor_thread()
+                    |
+                    v
+             pthread_create()
+                    |
+          +---------+---------+
+          |                   |
+          v                   v
+   Main Shell Thread    Monitor Thread
+          |                   |
+          v                   v
+   Accept Commands          sleep(10)
+          |                   |
+          v                   v
+   Execute Commands     Print Status Message
+          |                   |
+          |              Repeat Monitoring
+          |
+          v
+     Continue Shell
+Important Thread Functions
+
+pthread_create()
+
+Creates a new thread that executes a specified function.
+
+pthread_detach()
+
+Marks a thread as detached so that its thread resources can be released automatically when it finishes.
+
+sleep()
+
+Pauses the calling thread for a specified number of seconds.
+
+Background Monitoring
+
+The monitoring thread periodically prints a status message while the shell is running.
+
+Example output:
+
+[Monitor] Mini Bash Clone Running...
+
+The monitor function uses a loop and sleep(10) to print the message periodically.
+
+The main shell thread can continue accepting and executing commands while the monitoring thread runs in the background.
+
+Compilation Support
+
+The project uses the -pthread compiler and linker option to enable POSIX thread support.
+
+The Makefile includes:
+
+LDFLAGS = -pthread
+Importance of Multithreading
+
+Multithreading allows multiple threads to execute within the same process. Threads share the process's memory space but can perform separate tasks.
+
+The monitoring thread demonstrates basic concurrency by performing periodic monitoring while the main shell continues its command-processing work.
+
